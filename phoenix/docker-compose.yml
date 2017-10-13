@@ -1,0 +1,24 @@
+version: '2'
+services:
+  # # Probably it's best to use elixir to create new apps only
+  # elixir:
+  #   image: elixir:1.5.2
+  #   volumes:
+  #     - .:/workdir
+  #   working_dir: /workdir
+  redis:
+    image: redis
+    volumes:
+      - ./tmp/docker/redis/data:/data
+  app:
+    build: .
+    volumes:
+      - ./app:/code
+    command: mix phx.server
+    # command: iex -S mix phx.server # interactive
+    env_file:
+      - .env
+    depends_on:
+      - redis
+    ports:
+      - "4000:4000"
